@@ -186,7 +186,7 @@ const Header = () => {
 };
 
 // --- Patient Management Components ---
-const PatientForm = ({ patient, onSave, onCancel, products }) => {
+const PatientForm = ({ patient, onSave, onCancel, products, userData, reps = [] }) => {
     const [formData, setFormData] = useState({
         name: patient?.name || '',
         whatsappNumber: patient?.whatsappNumber || '',
@@ -194,6 +194,7 @@ const PatientForm = ({ patient, onSave, onCancel, products }) => {
         packs: patient?.history?.[patient.history.length - 1]?.packs || 1,
         productUsed: patient?.history?.[patient.history.length - 1]?.productUsed || '',
         pricePaid: patient?.history?.[patient.history.length - 1]?.pricePaid || '',
+        repId: patient?.repId || '',
     });
     const [error, setError] = useState('');
 
@@ -204,8 +205,8 @@ const PatientForm = ({ patient, onSave, onCancel, products }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (!formData.name || !formData.whatsappNumber || !formData.productUsed || !formData.pricePaid || formData.packs < 1) {
-            setError('Please fill all fields correctly.');
+        if (!formData.name || !formData.whatsappNumber || !formData.productUsed || !formData.pricePaid || formData.packs < 1 || (userData?.role === 'admin' && !formData.repId)) {
+            setError('Please fill all fields correctly. Admin must assign a representative.');
             return;
         }
         onSave(formData);
@@ -217,6 +218,12 @@ const PatientForm = ({ patient, onSave, onCancel, products }) => {
             <div className="space-y-4">
                 <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Patient Name" className="w-full p-3 border rounded-lg" required />
                 <input type="text" name="whatsappNumber" value={formData.whatsappNumber} onChange={handleChange} placeholder="WhatsApp Number (e.g., 919876543210)" className="w-full p-3 border rounded-lg" required />
+                {userData?.role === 'admin' && (
+                    <select name="repId" value={formData.repId} onChange={handleChange} className="w-full p-3 border rounded-lg" required>
+                        <option value="">Assign a Representative</option>
+                        {reps.map(r => <option key={r.id} value={r.id}>{r.name} ({r.country})</option>)}
+                    </select>
+                )}
                 <input type="date" name="purchaseDate" value={formData.purchaseDate} onChange={handleChange} className="w-full p-3 border rounded-lg" required />
                 <input type="number" name="packs" min="1" value={formData.packs} onChange={handleChange} placeholder="Number of Packs" className="w-full p-3 border rounded-lg" required />
                 <select name="productUsed" value={formData.productUsed} onChange={handleChange} className="w-full p-3 border rounded-lg" required>
@@ -286,7 +293,6 @@ const ReorderModal = ({ patient, isOpen, onClose, onReorder, products }) => {
     );
 };
 
-// --- NEW RESPONSIVE PATIENT TABLE/LIST ---
 const PatientTable = ({ patients, onEdit, onDelete, onReorder, products }) => {
     const getProductName = (productId) => products.find(p => p.id === productId)?.name || 'Unknown';
 
@@ -659,11 +665,18 @@ const ProductManager = ({ products, onSave, onDelete }) => {
 };
 
 const AdminDashboard = () => {
+    const { userData } = useAuth();
     const [allPatients, setAllPatients] = useState([]);
     const [products, setProducts] = useState([]);
     const [reps, setReps] = useState([]);
     const [loading, setLoading] = useState(true);
     const [filters, setFilters] = useState({ country: 'all', rep: 'all', status: 'all' });
+
+    // State for modals and selected patient
+    const [isAddModalOpen, setAddModalOpen] = useState(false);
+    const [isEditModalOpen, setEditModalOpen] = useState(false);
+    const [isReorderModalOpen, setReorderModalOpen] = useState(false);
+    const [selectedPatient, setSelectedPatient] = useState(null);
 
     useEffect(() => {
         let isMounted = true;
@@ -682,6 +695,128 @@ const AdminDashboard = () => {
         });
         return () => { isMounted = false; patientsUnsub(); productsUnsub(); repsUnsub(); };
     }, []);
+
+    // Modal opener functions
+    const openEditModal = (patient) => {
+        setSelectedPatient(patient);
+        setEditModalOpen(true);
+    };
+
+    const openReorderModal = (patient) => {
+        setSelectedPatient(patient);
+        setReorderModalOpen(true);
+    };
+
+    // Patient CRUD handlers for Admin
+    const handleAddPatient = async (patientData) => {
+        try {
+            const selectedRep = reps.find(r => r.id === patientData.repId);
+            if (!selectedRep) {
+                console.error("Selected representative not found!");
+                alert("Please select a representative.");
+                return;
+            }
+
+            const nextDueDate = calculateNextDueDate(patientData.purchaseDate, patientData.packs);
+            const newPatient = {
+                name: patientData.name,
+                whatsappNumber: patientData.whatsappNumber,
+                repId: selectedRep.id,
+                repName: selectedRep.name,
+                country: selectedRep.country,
+                history: [{
+                    purchaseDate: patientData.purchaseDate,
+                    packs: parseInt(patientData.packs, 10),
+                    pricePaid: parseFloat(patientData.pricePaid),
+                    productUsed: patientData.productUsed,
+                }],
+                nextDueDate: nextDueDate,
+                createdAt: serverTimestamp(),
+                lastUpdatedAt: serverTimestamp(),
+                recentlyReordered: false,
+            };
+            const docRef = await addDoc(collection(db, 'patients'), newPatient);
+            googleSheetsService.syncPatient({ id: docRef.id, ...newPatient });
+            setAddModalOpen(false);
+        } catch (error) {
+            console.error("Error adding patient: ", error);
+        }
+    };
+
+    const handleEditPatient = async (patientData) => {
+        try {
+            const patientRef = doc(db, 'patients', selectedPatient.id);
+            const nextDueDate = calculateNextDueDate(patientData.purchaseDate, patientData.packs);
+
+            const updatedHistory = [...selectedPatient.history];
+            updatedHistory[updatedHistory.length - 1] = {
+                purchaseDate: patientData.purchaseDate,
+                packs: parseInt(patientData.packs, 10),
+                pricePaid: parseFloat(patientData.pricePaid),
+                productUsed: patientData.productUsed,
+            };
+
+            const updatedPatientData = {
+                name: patientData.name,
+                whatsappNumber: patientData.whatsappNumber,
+                history: updatedHistory,
+                nextDueDate: nextDueDate,
+                lastUpdatedAt: serverTimestamp(),
+            };
+
+            if (patientData.repId && patientData.repId !== selectedPatient.repId) {
+                const newRep = reps.find(r => r.id === patientData.repId);
+                if (newRep) {
+                    updatedPatientData.repId = newRep.id;
+                    updatedPatientData.repName = newRep.name;
+                    updatedPatientData.country = newRep.country;
+                }
+            }
+
+            await updateDoc(patientRef, updatedPatientData);
+            googleSheetsService.syncPatient({ id: selectedPatient.id, ...updatedPatientData });
+            setEditModalOpen(false);
+            setSelectedPatient(null);
+        } catch (error) {
+            console.error("Error updating patient: ", error);
+        }
+    };
+
+    const handleDeletePatient = async (patientId) => {
+        if (window.confirm('Are you sure you want to delete this patient? This action cannot be undone.')) {
+            try {
+                await deleteDoc(doc(db, 'patients', patientId));
+                googleSheetsService.deletePatient(patientId);
+            } catch (error) {
+                console.error("Error deleting patient: ", error);
+            }
+        }
+    };
+
+    const handleReorder = async (reorderData) => {
+        try {
+            const patientRef = doc(db, 'patients', selectedPatient.id);
+            const nextDueDate = calculateNextDueDate(reorderData.purchaseDate, reorderData.packs);
+            const newHistoryEntry = {
+                purchaseDate: reorderData.purchaseDate,
+                packs: parseInt(reorderData.packs, 10),
+                pricePaid: parseFloat(reorderData.pricePaid),
+                productUsed: reorderData.productUsed,
+            };
+            const updatedPatient = {
+                history: [...selectedPatient.history, newHistoryEntry],
+                nextDueDate: nextDueDate,
+                lastUpdatedAt: serverTimestamp(),
+                recentlyReordered: true,
+            };
+            await updateDoc(patientRef, updatedPatient);
+            googleSheetsService.syncPatient({ id: selectedPatient.id, ...updatedPatient });
+            setReorderModalOpen(false);
+            setSelectedPatient(null);
+        } catch (error) {
+            console.error("Error reordering: ", error);
+        }
+    };
 
     const handleFilterChange = (e) => setFilters(prev => ({ ...prev, [e.target.name]: e.target.value }));
 
@@ -717,7 +852,12 @@ const AdminDashboard = () => {
 
     return (
         <div className="p-4 md:p-8">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6">Admin Global Dashboard</h2>
+            <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
+                <h2 className="text-2xl font-bold text-gray-800">Admin Global Dashboard</h2>
+                <button onClick={() => setAddModalOpen(true)} className="w-full sm:w-auto flex items-center justify-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                    <PlusCircleIcon /><span className="ml-2">Add Patient</span>
+                </button>
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 p-4 bg-white rounded-lg shadow">
                 <div className="lg:col-span-1 flex items-center space-x-2">
@@ -749,8 +889,42 @@ const AdminDashboard = () => {
                 </div>
             </div>
 
-            <PatientTable patients={filteredPatients} products={products} onEdit={() => { }} onDelete={() => { }} onReorder={() => { }} />
+            <PatientTable patients={filteredPatients} products={products} onEdit={openEditModal} onDelete={handleDeletePatient} onReorder={openReorderModal} />
             <ProductManager products={products} onSave={handleProductSave} onDelete={handleProductDelete} />
+
+            {/* Modals for Admin */}
+            <Modal isOpen={isAddModalOpen} onClose={() => setAddModalOpen(false)} title="Add New Patient">
+                <PatientForm
+                    onSave={handleAddPatient}
+                    onCancel={() => setAddModalOpen(false)}
+                    products={products}
+                    userData={userData}
+                    reps={reps}
+                />
+            </Modal>
+
+            {selectedPatient && (
+                <Modal isOpen={isEditModalOpen} onClose={() => setEditModalOpen(false)} title={`Edit ${selectedPatient.name}`}>
+                    <PatientForm
+                        patient={selectedPatient}
+                        onSave={handleEditPatient}
+                        onCancel={() => setEditModalOpen(false)}
+                        products={products}
+                        userData={userData}
+                        reps={reps}
+                    />
+                </Modal>
+            )}
+
+            {selectedPatient && (
+                <ReorderModal
+                    patient={selectedPatient}
+                    isOpen={isReorderModalOpen}
+                    onClose={() => setReorderModalOpen(false)}
+                    onReorder={handleReorder}
+                    products={products}
+                />
+            )}
         </div>
     );
 };
