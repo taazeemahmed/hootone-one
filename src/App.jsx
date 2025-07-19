@@ -698,18 +698,20 @@ const ProductManager = ({ products, onSave, onDelete }) => {
     const [isModalOpen, setModalOpen] = useState(false);
     const [name, setName] = useState('');
     const [priceUSD, setPriceUSD] = useState('');
-    const [imageFile, setImageFile] = useState(null);
+    const [imageUrl, setImageUrl] = useState(''); // Changed from imageFile
     const [error, setError] = useState('');
 
     const handleSave = async () => {
-        if (!name || !priceUSD || !imageFile) {
+        // Validation now checks for imageUrl instead of imageFile
+        if (!name || !priceUSD || !imageUrl) {
             setError('All fields are required.');
             return;
         }
-        await onSave({ name, priceUSD: parseFloat(priceUSD), imageFile });
+        // Pass imageUrl directly to the onSave function
+        await onSave({ name, priceUSD: parseFloat(priceUSD), imageUrl });
         setName('');
         setPriceUSD('');
-        setImageFile(null);
+        setImageUrl(''); // Reset imageUrl state
         setError('');
         setModalOpen(false);
     };
@@ -738,10 +740,8 @@ const ProductManager = ({ products, onSave, onDelete }) => {
                     {error && <p className="text-red-500 text-sm">{error}</p>}
                     <input type="text" value={name} onChange={e => setName(e.target.value)} placeholder="Product Name" className="w-full p-2 border rounded-lg" />
                     <input type="number" value={priceUSD} onChange={e => setPriceUSD(e.target.value)} placeholder="Price (USD)" className="w-full p-2 border rounded-lg" />
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Product Image</label>
-                        <input type="file" onChange={e => setImageFile(e.target.files[0])} className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
-                    </div>
+                    {/* Replaced file input with text input for URL */}
+                    <input type="text" value={imageUrl} onChange={e => setImageUrl(e.target.value)} placeholder="Product Image URL" className="w-full p-2 border rounded-lg" />
                     <div className="flex justify-end space-x-3 mt-4">
                         <button onClick={() => setModalOpen(false)} className="bg-gray-300 px-4 py-2 rounded-lg">Cancel</button>
                         <button onClick={handleSave} className="bg-blue-600 text-white px-4 py-2 rounded-lg">Save Product</button>
@@ -803,14 +803,9 @@ const AdminDashboard = () => {
         setFilters(prev => ({ ...prev, [e.target.name]: e.target.value }));
     };
 
-    const handleProductSave = async ({ name, priceUSD, imageFile }) => {
+    const handleProductSave = async ({ name, priceUSD, imageUrl }) => {
         try {
-            // 1. Upload image to Firebase Storage
-            const imageRef = ref(storage, `products/${Date.now()}_${imageFile.name}`);
-            const snapshot = await uploadBytes(imageRef, imageFile);
-            const imageUrl = await getDownloadURL(snapshot.ref);
-
-            // 2. Save product data to Firestore
+            // Save product data to Firestore with the provided image URL
             const newProduct = { name, priceUSD, imageUrl, createdAt: serverTimestamp() };
             const docRef = await addDoc(collection(db, 'products'), newProduct);
             googleSheetsService.syncProduct({ id: docRef.id, ...newProduct });
