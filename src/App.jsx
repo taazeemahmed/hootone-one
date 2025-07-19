@@ -42,7 +42,15 @@ const PackageIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" hei
 
 // --- Firebase and Auth Configuration ---
 // IMPORTANT: Replace with your actual Firebase configuration.
-const firebaseConfig = JSON.parse(import.meta.env.VITE_FIREBASE_CONFIG);
+const firebaseConfig = {
+    apiKey: "AIzaSyDMYCUMBduZ6wpngG34uJPxGpW_nyqRSR4",
+    authDomain: "hootoneone.firebaseapp.com",
+    projectId: "hootoneone",
+    storageBucket: "hootoneone.firebasestorage.app",
+    messagingSenderId: "919764181178",
+    appId: "1:919764181178:web:7907f6dbfa11824d32a283",
+    measurementId: "G-466NJXEWJS"
+};
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
