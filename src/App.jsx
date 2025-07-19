@@ -87,22 +87,33 @@ export const AuthProvider = ({ children }) => {
             setLoading(false);
             useEffect(() => {
                 const unsubscribe = onAuthStateChanged(auth, async (user) => {
-                    console.log("🔥 Auth User UID:", user?.uid); // Add this
+                    console.log("📌 onAuthStateChanged triggered");
+                    setUser(user);
+
                     if (user) {
-                        const userDocRef = doc(db, 'users', user.uid);
-                        const userDocSnap = await getDoc(userDocRef);
-                        console.log("📄 Firestore userDoc exists:", userDocSnap.exists()); // Add this
-                        if (userDocSnap.exists()) {
-                            setUserData({ uid: user.uid, ...userDocSnap.data() });
-                        } else {
-                            console.warn("❌ User found in Auth, but not in Firestore.");
+                        try {
+                            const userDocRef = doc(db, 'users', user.uid);
+                            const userDocSnap = await getDoc(userDocRef);
+
+                            console.log("✅ Firestore UID:", user.uid);
+                            console.log("📄 Doc exists:", userDocSnap.exists());
+
+                            if (userDocSnap.exists()) {
+                                setUserData({ uid: user.uid, ...userDocSnap.data() });
+                            } else {
+                                console.warn("❌ No Firestore document found for UID:", user.uid);
+                                setUserData(null); // You may want to redirect or show a message here
+                            }
+                        } catch (err) {
+                            console.error("🔥 Error fetching user doc:", err);
                             setUserData(null);
                         }
                     } else {
-                        console.warn("No user logged in.");
+                        console.log("👋 No user signed in");
                         setUserData(null);
                     }
-                    setLoading(false);
+
+                    setLoading(false); // Always call this
                 });
 
                 return () => unsubscribe();
