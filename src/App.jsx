@@ -166,7 +166,7 @@ const Header = () => {
     return (
         <header className="bg-white shadow-sm p-4 flex flex-wrap justify-between items-center">
             <div className="flex items-center mb-2 sm:mb-0">
-                <img src="https://i.ibb.co/pW6vj9h/hootone-remedies-logo.png" alt="Hootone Remedies Logo" className="h-10 mr-3" />
+                <img src="https://hootone.org/wp-content/uploads/2024/06/cropped-Logo-website.jpg" alt="Hootone Remedies Logo" className="h-10 mr-3" />
                 <h1 className="text-lg sm:text-xl font-bold text-gray-800">Patient Follow-up</h1>
             </div>
             {userData && (
@@ -425,9 +425,9 @@ const LoginPage = () => {
         <div className="min-h-screen bg-gray-100 flex flex-col justify-center items-center p-4">
             <div className="w-full max-w-md bg-white rounded-xl shadow-md p-8">
                 <div className="flex justify-center mb-6">
-                    <img src="https://i.ibb.co/pW6vj9h/hootone-remedies-logo.png" alt="Hootone Remedies" className="h-20" />
+                    <img src="https://hootone.org/wp-content/uploads/2024/06/cropped-Logo-website.jpg" alt="Hootone Remedies" className="h-20" />
                 </div>
-                <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Rep & Admin Login</h2>
+                <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Hootone One - Login</h2>
                 {error && <p className="bg-red-100 text-red-700 p-3 rounded-lg mb-4 text-center">{error}</p>}
                 <form onSubmit={handleLogin} className="space-y-6">
                     <div className="relative">
