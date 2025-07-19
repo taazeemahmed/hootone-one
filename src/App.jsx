@@ -35,13 +35,12 @@ const SearchIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" heig
 const EditIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" /></svg>;
 const TrashIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /><line x1="10" y1="11" x2="10" y2="17" /><line x1="14" y1="11" x2="14" y2="17" /></svg>;
 const RefreshCwIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 4 23 10 17 10" /><polyline points="1 20 1 14 7 14" /><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" /></svg>;
-const WhatsAppIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#25D366" stroke="white" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><path d="M19.1 4.9C17.2 3 14.7 2 12 2S6.8 3 4.9 4.9C3 6.8 2 9.3 2 12s1 5.2 2.9 7.1c1.9 1.9 4.4 2.9 7.1 2.9h.1c2.8 0 5.3-1 7.2-2.9 1.9-1.9 2.9-4.4 2.9-7.1.1-2.8-1-5.3-2.9-7.2zM16.5 15c-.2 0-.4 0-.6-.1-.2-.1-1.3-.6-1.5-1.1-.2-.5.2-1 .3-1.1.1-.1.3-.2.4-.3.1 0 .1-.1.2-.2s0-.2 0-.3c0-.1-.1-.2-.2-.3-.1-.1-.2-.2-.3-.3s-.2-.1-.3 0c-.1 0-1.3.5-1.5.7-.2.2-.4.3-.6.3-.2 0-.4-.1-.6-.2s-.8-.5-1.5-1.2c-.6-.6-1-1.3-1.2-1.5s-.2-.4-.1-.6.3-.5.4-.6c.1-.1.2-.2.3-.3s.2-.2.3-.3c.1-.1.1-.2 0-.4-.1-.1-.1-.6-.2-1s-.3-.8-.4-.9c-.1-.1-.2-.1-.3-.1h-.3c-.1 0-.3.1-.4.2s-.5.5-.6.6c-.1.1-.2.3-.3.4s-.3.4-.4.5c-.1.1-.2.2-.3.3s-.2.2-.3.2c-.1 0-.2 0-.3-.1s-.4-.2-.6-.3c-.2-.1-.4-.2-.6-.3s-.4-.2-.5-.3c-.2-.1-.3-.2-.4-.3s-.2-.2-.3-.3c-.1-.1-.2-.2-.2-.3s-.1-.2-.1-.3c0-.1 0-.2.1-.3s.1-.2.2-.3c.1-.1.1-.2.2-.2s.2-.2.3-.3c.1-.1.1-.2.2-.3s.1-.2.1-.3c0-.1 0-.2-.1-.3s-.1-.2-.2-.3c-.1-.1-.1-.2-.2-.2s-.2-.2-.3-.3c-.1-.1-.2-.1-.3-.1s-.2 0-.3.1c-.1.1-.2.1-.3.2s-.2.2-.3.3c-.1.1-.2.2-.2.3s-.1.2-.1.3c0 .1 0 .2.1.3s.1.2.2.3c.1.1.1.2.2.2s.2.2.3.3c.1.1.1.2.2.3s.1.2.1.3c0 .1 0 .2-.1.3s-.1.2-.2.3c-.1.1-.1.2-.2.2s-.2.2-.3.3c-.1.1-.2.1-.3.1s-.2 0-.3-.1c-.1-.1-.2-.1-.3-.2s-.2-.2-.3-.3c-.1-.1-.2-.2-.2-.3s-.1-.2-.1-.3c0-.1 0-.2.1-.3s.1-.2.2-.3c.1-.1.1-.2.2-.2s.2-.2.3-.3c.1-.1.1-.2.2-.3s.1-.2.1-.3c0-.1 0-.2-.1-.3s-.1-.2-.2-.3c-.1-.1-.1-.2-.2-.2s-.2-.2-.3-.3c-.1-.1-.2-.1-.3-.1z" /></svg>;
+const WhatsAppIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#25D366" stroke="white" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><path d="M19.1 4.9C17.2 3 14.7 2 12 2S6.8 3 4.9 4.9C3 6.8 2 9.3 2 12s1 5.2 2.9 7.1c1.9 1.9 4.4 2.9 7.1 2.9h.1c2.8 0 5.3-1 7.2-2.9 1.9-1.9 2.9-4.4 2.9-7.1.1-2.8-1-5.3-2.9-7.2zM16.5 15c-.2 0-.4 0-.6-.1-.2-.1-1.3-.6-1.5-1.1-.2-.5.2-1 .3-1.1.1-.1.3-.2.4-.3.1 0 .1-.1.2-.2s0-.2 0-.3c0-.1-.1-.2-.2-.3-.1-.1-.2-.2-.3-.3s-.2-.1-.3 0c-.1 0-1.3.5-1.5.7-.2.2-.4.3-.6.3-.2 0-.4-.1-.6-.2s-.8-.5-1.5-1.2c-.6-.6-1-1.3-1.2-1.5s-.2-.4-.1-.6.3-.5.4-.6c.1-.1.2-.2.3-.3s.2-.2.3-.3c.1-.1.1-.2 0-.4-.1-.1-.1-.6-.2-1s-.3-.8-.4-.9c-.1-.1-.2-.1-.3-.1h-.3c-.1 0-.3.1-.4.2s-.5.5-.6.6c-.1.1-.2.3-.3.4s-.3.4-.4.5c-.1.1-.2.2-.3.3s-.2.2-.3.2c-.1 0-.2 0-.3-.1s-.4-.2-.6-.3c-.2-.1-.4-.2-.6-.3s-.4-.2-.5-.3c-.2-.1-.3-.2-.4-.3s-.2-.2-.3-.3c-.1-.1-.2-.2-.2-.3s-.1-.2-.1-.3c0-.1 0-.2.1-.3s.1-.2.2-.3c.1-.1.1-.2.2-.2s.2-.2.3-.3c.1-.1.1-.2.2-.3s.1-.2.1-.3c0-.1 0-.2-.1-.3s-.1-.2-.2-.3c-.1-.1-.1-.2-.2-.2s-.2-.2-.3-.3c-.1-.1-.2-.1-.3-.1s-.2 0-.3.1c-.1.1-.2.1-.3.2s-.2.2-.3.3c-.1.1-.2.2-.2.3s-.1.2-.1.3c0 .1 0 .2.1.3s.1.2.2.3c.1.1.1.2.2.2s.2.2.3.3c.1.1.1.2.2.3s.1.2.1.3c0 .1 0 .2-.1.3s-.1.2-.2.3c-.1-.1-.1.2-.2.2s-.2.2-.3.3c-.1.1-.2.1-.3.1s-.2 0-.3-.1c-.1-.1-.2-.1-.3-.2s-.2-.2-.3-.3c-.1-.1-.2-.2-.2-.3s-.1-.2-.1-.3c0-.1 0-.2.1-.3s.1-.2.2-.3c.1-.1.1-.2.2-.2s.2-.2.3-.3c.1-.1.1-.2.2-.3s.1-.2.1-.3c0-.1 0-.2-.1-.3s-.1-.2-.2-.3c-.1-.1-.1-.2-.2-.2s-.2-.2-.3-.3c-.1-.1-.2-.1-.3-.1z" /></svg>;
 const FilterIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" /></svg>;
 const XIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>;
 const PackageIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16.5 9.4a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0z" /><path d="M12 15H3l-1-5L2 2h20l.95 8-1 .95Z" /><path d="m3.5 15 4.5-3 4.5 3 4.5-3" /></svg>;
 
 // --- Firebase and Auth Configuration ---
-// IMPORTANT: Replace with your actual Firebase configuration.
 const firebaseConfig = {
     apiKey: "AIzaSyDMYCUMBduZ6wpngG34uJPxGpW_nyqRSR4",
     authDomain: "hootoneone.firebaseapp.com",
@@ -65,47 +64,36 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const initializeAuth = async () => {
-            try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    // Fallback for local development if no token is provided
-                    // await signInAnonymously(auth);
-                }
-            } catch (error) {
-                console.error("Error signing in:", error);
-            }
-        };
-
-        initializeAuth();
-
+        // This listener handles all authentication state changes.
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
             setUser(user);
             if (user) {
+                // If a user is logged in, fetch their specific data from Firestore.
                 const userDocRef = doc(db, 'users', user.uid);
                 const userDocSnap = await getDoc(userDocRef);
                 if (userDocSnap.exists()) {
+                    // User document found, set the user data.
                     setUserData({ uid: user.uid, ...userDocSnap.data() });
                 } else {
-                    // This case might happen if a user is created in Auth but not in Firestore
-                    // For this app, we assume user docs are always created.
+                    // This can happen if a user is in Auth but not Firestore.
+                    // Treat them as not fully logged in by clearing user data.
                     setUserData(null);
                 }
             } else {
+                // No user is logged in, clear any existing user data.
                 setUserData(null);
             }
+            // IMPORTANT: Set loading to false only after all checks are complete.
             setLoading(false);
         });
 
+        // Cleanup the listener when the component unmounts.
         return () => unsubscribe();
     }, []);
 
     const login = (email, password) => signInWithEmailAndPassword(auth, email, password);
     const logout = () => signOut(auth);
 
-    // Note: In a real app, you'd have a secure way to create users.
-    // This is a helper for initial setup.
     const createUser = async (email, password, name, country, role) => {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
@@ -128,26 +116,15 @@ export const useAuth = () => {
 };
 
 // --- Google Sheets API Simulation ---
-// In a production app, these functions would trigger a Google Cloud Function.
-// The Cloud Function would contain the secure logic to interact with the Google Sheets API.
 const googleSheetsService = {
     syncPatient: (patientData) => {
         console.log("Simulating: Syncing patient to Google Sheets", patientData);
-        // In production:
-        // 1. Make a fetch call to your Google Cloud Function endpoint.
-        // 2. Pass patientData in the body.
-        // 3. The Cloud Function uses the 'googleapis' library to append/update a row in the "Patients" sheet.
     },
     deletePatient: (patientId) => {
         console.log("Simulating: Deleting patient from Google Sheets", patientId);
-        // In production:
-        // 1. Cloud Function finds the row with the matching patientId.
-        // 2. Deletes that row.
     },
     syncProduct: (productData) => {
         console.log("Simulating: Syncing product to Google Sheets", productData);
-        // In production:
-        // 1. Cloud Function appends/updates a row in the "Products" sheet.
     }
 };
 
@@ -491,24 +468,31 @@ const RepDashboard = () => {
     useEffect(() => {
         if (!userData) return;
 
+        let isMounted = true;
+
         // Fetch Products
         const productsUnsub = onSnapshot(collection(db, 'products'), (snapshot) => {
-            const productsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            setProducts(productsData);
+            if (isMounted) {
+                const productsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                setProducts(productsData);
+            }
         });
 
         // Fetch Patients for this Rep
         const q = query(collection(db, 'patients'), where('repId', '==', userData.uid));
         const patientsUnsub = onSnapshot(q, (snapshot) => {
-            const patientsData = snapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data()
-            }));
-            setPatients(patientsData);
-            setLoading(false);
+            if (isMounted) {
+                const patientsData = snapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
+                setPatients(patientsData);
+                setLoading(false); // Set loading to false after patients are fetched
+            }
         });
 
         return () => {
+            isMounted = false;
             productsUnsub();
             patientsUnsub();
         };
@@ -746,27 +730,35 @@ const AdminDashboard = () => {
     });
 
     useEffect(() => {
+        let isMounted = true;
         // Fetch All Patients
         const patientsUnsub = onSnapshot(collection(db, 'patients'), (snapshot) => {
-            const patientsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            setAllPatients(patientsData);
-            setLoading(false);
+            if (isMounted) {
+                const patientsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                setAllPatients(patientsData);
+                setLoading(false); // Set loading to false after patients are fetched
+            }
         });
 
         // Fetch All Products
         const productsUnsub = onSnapshot(collection(db, 'products'), (snapshot) => {
-            const productsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            setProducts(productsData);
+            if (isMounted) {
+                const productsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                setProducts(productsData);
+            }
         });
 
         // Fetch All Reps
         const repsQuery = query(collection(db, 'users'), where('role', '==', 'representative'));
         const repsUnsub = onSnapshot(repsQuery, (snapshot) => {
-            const repsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            setReps(repsData);
+            if (isMounted) {
+                const repsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                setReps(repsData);
+            }
         });
 
         return () => {
+            isMounted = false;
             patientsUnsub();
             productsUnsub();
             repsUnsub();
