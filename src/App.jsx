@@ -888,6 +888,10 @@ function App() {
 const MainApp = () => {
     const { user, userData, loading } = useAuth();
 
+    console.log("💡 user:", user);
+    console.log("💡 userData:", userData);
+    console.log("💡 loading:", loading);
+
     if (loading) {
         return (
             <div className="min-h-screen bg-gray-50 flex items-center justify-center">
