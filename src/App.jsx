@@ -85,6 +85,29 @@ export const AuthProvider = ({ children }) => {
             }
             // IMPORTANT: Set loading to false only after all checks are complete.
             setLoading(false);
+            useEffect(() => {
+                const unsubscribe = onAuthStateChanged(auth, async (user) => {
+                    console.log("🔥 Auth User UID:", user?.uid); // Add this
+                    if (user) {
+                        const userDocRef = doc(db, 'users', user.uid);
+                        const userDocSnap = await getDoc(userDocRef);
+                        console.log("📄 Firestore userDoc exists:", userDocSnap.exists()); // Add this
+                        if (userDocSnap.exists()) {
+                            setUserData({ uid: user.uid, ...userDocSnap.data() });
+                        } else {
+                            console.warn("❌ User found in Auth, but not in Firestore.");
+                            setUserData(null);
+                        }
+                    } else {
+                        console.warn("No user logged in.");
+                        setUserData(null);
+                    }
+                    setLoading(false);
+                });
+
+                return () => unsubscribe();
+            }, []);
+
         });
 
         // Cleanup the listener when the component unmounts.
@@ -114,14 +137,6 @@ export const AuthProvider = ({ children }) => {
 export const useAuth = () => {
     return useContext(AuthContext);
 };
-
-if (user && !userData) {
-    return (
-        <div className="min-h-screen flex items-center justify-center">
-            <p className="text-red-600">User document missing in Firestore. Please contact admin.</p>
-        </div>
-    );
-}
 
 // --- Google Sheets API Simulation ---
 const googleSheetsService = {
