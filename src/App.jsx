@@ -115,6 +115,14 @@ export const useAuth = () => {
     return useContext(AuthContext);
 };
 
+if (user && !userData) {
+    return (
+        <div className="min-h-screen flex items-center justify-center">
+            <p className="text-red-600">User document missing in Firestore. Please contact admin.</p>
+        </div>
+    );
+}
+
 // --- Google Sheets API Simulation ---
 const googleSheetsService = {
     syncPatient: (patientData) => {
