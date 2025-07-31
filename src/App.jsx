@@ -487,28 +487,76 @@ const RepDashboard = () => {
 
     const handleAddPatient = async (patientData) => {
         try {
-            const nextDueDate = calculateNextDueDate(patientData.purchaseDate, patientData.packs);
-            const newPatient = {
-                ...patientData,
-                repId: userData.uid,
-                repName: userData.name,
-                country: userData.country,
-                history: [{
-                    purchaseDate: patientData.purchaseDate,
-                    packs: parseInt(patientData.packs, 10),
-                    pricePaid: parseFloat(patientData.pricePaid),
-                    productUsed: patientData.productUsed,
-                }],
-                nextDueDate: nextDueDate,
-                createdAt: serverTimestamp(),
-                lastUpdatedAt: serverTimestamp(),
-                recentlyReordered: false,
+            const patientsRef = collection(db, "patients");
+
+            const q = query(
+                patientsRef,
+                where("repId", "==", userData.uid),
+                where("whatsappNumber", "==", patientData.whatsappNumber)
+            );
+            const snap = await getDocs(q);
+
+            const saleRecord = {
+                productUsed: patientData.productUsed,
+                packs: parseInt(patientData.packs, 10),
+                pricePaid: parseFloat(patientData.pricePaid),
+                purchaseDate: patientData.purchaseDate,
             };
-            const docRef = await addDoc(collection(db, 'patients'), newPatient);
-            googleSheetsService.syncPatient({ id: docRef.id, ...newPatient });
+
+            const getNextDueDate = (purchaseDate, packs) => {
+                const date = new Date(purchaseDate);
+                date.setMonth(date.getMonth() + parseInt(packs, 10));
+                return date;
+            };
+
+            if (!snap.empty) {
+                // PATIENT EXISTS: update
+                const patientDoc = snap.docs[0];
+                const docRef = doc(db, "patients", patientDoc.id);
+
+                await runTransaction(db, async (transaction) => {
+                    const fresh = await transaction.get(docRef);
+                    if (!fresh.exists()) throw new Error("Patient not found");
+
+                    const patient = fresh.data();
+                    const updatedHistory = Array.isArray(patient.history)
+                        ? [...patient.history, saleRecord]
+                        : [saleRecord];
+
+                    const newNextDueDate = getNextDueDate(
+                        saleRecord.purchaseDate,
+                        saleRecord.packs
+                    );
+
+                    transaction.update(docRef, {
+                        history: updatedHistory,
+                        nextDueDate: newNextDueDate,
+                        recentlyReordered: true,
+                        lastUpdatedAt: serverTimestamp(),
+                    });
+                });
+
+            } else {
+                // NEW PATIENT: create
+                const newPatient = {
+                    name: patientData.name,
+                    whatsappNumber: patientData.whatsappNumber,
+                    repId: userData.uid,
+                    repName: userData.name,
+                    country: userData.country,
+                    history: [saleRecord],
+                    nextDueDate: getNextDueDate(saleRecord.purchaseDate, saleRecord.packs),
+                    createdAt: serverTimestamp(),
+                    lastUpdatedAt: serverTimestamp(),
+                    recentlyReordered: false,
+                };
+
+                await addDoc(patientsRef, newPatient);
+            }
+
             setAddModalOpen(false);
         } catch (error) {
-            console.error("Error adding patient: ", error);
+            console.error("Error adding/updating patient: ", error);
         }
     };
 
